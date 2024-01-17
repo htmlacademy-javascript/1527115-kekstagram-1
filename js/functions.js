@@ -1,10 +1,10 @@
 // Проверяем, является ли строка палиндромом
 
-function checkInPalindrom (text) {
+const checkInPalindrom = (text) => {
   const string = text.toLowerCase().replaceAll(' ', '');
   const newString = string.split('').reverse().join('');
   return (string === newString) ? 'Это палиндром' : 'Это не палиндром';
-}
+};
 
 checkInPalindrom('Лёша на полке клопа нашёл ');
 
@@ -12,11 +12,11 @@ checkInPalindrom('Лёша на полке клопа нашёл ');
 
 // Извлекаем целые числа из строки
 
-function toNumber (num) {
+const toNumber = (num) => {
   let result = '';
   let thisNum;
 
-  if(typeof(num) === 'string') {
+  if (typeof(num) === 'string') {
     thisNum = num.replaceAll(' ', '');
   } else {
     thisNum = num.toString();
@@ -36,13 +36,14 @@ function toNumber (num) {
   }
 
   return result;
-}
+};
+
 toNumber('а я томат');
 // console.log(toNumber('а я томат'));
 
 // Функция, возвращающая исходную строку, дополненую указанными символами до заданной длины
 
-function redefenitionString (string, count, addSymbol) {
+const redefenitionString = (string, count, addSymbol) => {
   let result = string;
 
   if (result.length >= count) {
@@ -66,15 +67,14 @@ function redefenitionString (string, count, addSymbol) {
       return result;
     }
   }
-}
+};
+
 redefenitionString('qwerty', 4, '0');
 // console.log(redefenitionString('qwerty', 4, '0'));
 
 // Проверка длины строки
 
-function checkingLenght (string, count) {
-  return (string.length <= count) ? 'true' : 'false';
-}
+const checkingLenght = (string, count) => string.length <= count;
 
-checkingLenght('проверяемая строка', 10);
-// console.log(checkingLenght('проверяемая строка', 10));
+checkingLenght('проверяемая строка', 18);
+// console.log(checkingLenght('проверяемая строка', 17));
