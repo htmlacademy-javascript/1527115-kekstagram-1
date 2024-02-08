@@ -1,4 +1,4 @@
 import {getPictures} from './data.js';
-import './util.js';
+import './minimize.js';
 
 getPictures();
