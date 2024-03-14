@@ -1,4 +1,4 @@
-import {getRandomArrayElement, getRandomInteger} from './util.js';
+import { getRandomArrayElement, getRandomInteger } from './util.js';
 
 const COMMENT_ID_MEANINGS = 999;
 const FOTO_DESCRIPTION = [
@@ -73,4 +73,4 @@ const getCreateFotoDescription = () => {
 
 const getPictures = () => Array.from({length: SIMILAR_FOTO_COUNT}, getCreateFotoDescription);
 
-export {getPictures};
+export { getPictures };
