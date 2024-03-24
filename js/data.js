@@ -67,10 +67,14 @@ const getCreateFotoDescription = () => {
     url: `photos/${randomIdIndex}.jpg`,
     descriptions: getRandomArrayElement(FOTO_DESCRIPTION),
     likes: getRandomInteger(15, 250),
-    comments: Array.from({length: getRandomInteger(1, 5)}, getCreatingComment)
+    comments: Array.from({length: getRandomInteger(1, 25)}, getCreatingComment)
   };
 };
 
 const getPictures = () => Array.from({length: SIMILAR_FOTO_COUNT}, getCreateFotoDescription);
+const pictureCollections = getPictures();
 
-export { getPictures };
+const pictureData = () => pictureCollections;
+
+// export { getPictures };
+export { pictureData };
