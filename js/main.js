@@ -1,8 +1,6 @@
-import { getPictures } from './data.js';
+import { pictureData } from './data.js';
 import { addUserImage } from './minimize.js';
-import { collectParameters } from './fullscreenPicture.js';
+import { initListener } from './fullscreen-picture.js';
 
-const pictureCollection = getPictures();
-
-collectParameters(pictureCollection);
-addUserImage(pictureCollection);
+initListener(pictureData());
+addUserImage(pictureData());
