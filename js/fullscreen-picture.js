@@ -87,11 +87,11 @@ const showModal = () => {
   closedPopup.addEventListener('click', hideModal);
 };
 
-const onModalEscKeydown = (evt) => {
+function onModalEscKeydown (evt) {
   if (isEscapeKey(evt)) {
     hideModal();
   }
-};
+}
 
 const initListener = () => {
   pictureContainer.addEventListener('click', (evt) => {

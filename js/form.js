@@ -11,6 +11,11 @@ const modalClosedButton = uploadImageModal.querySelector('#upload-cancel');
 const fieldHashteg = document.querySelector('.text__hashtags');
 const fieldComment = document.querySelector('.text__description');
 
+const pristine = new Pristine(form, {
+  classTo: 'img-upload__field-wrapper',
+  errorTextParent: 'img-upload__field-wrapper',
+});
+
 const showModal = () => {
   uploadImageModal.classList.remove('hidden');
   body.classList.add('modal-open');
@@ -33,12 +38,12 @@ const onFileInputChange = () => {
   showModal();
 };
 
-const onModalEscKeydown = (evt) => {
+function onModalEscKeydown (evt) {
   if (isEscapeKey(evt)) {
     evt.preventDefault();
     hideModal();
   }
-};
+}
 
 fieldHashteg.addEventListener ('focus', () => {
   document.removeEventListener('keydown', onModalEscKeydown);
@@ -56,11 +61,6 @@ fieldComment.addEventListener ('blur', () => {
   document.addEventListener('keydown', onModalEscKeydown);
 });
 
-const pristine = new Pristine(form, {
-  classTo: 'img-upload__field-wrapper',
-  errorTextParent: 'img-upload__field-wrapper',
-});
-
 const isValidTag = (tag) => VALID_HASHTEG.test(tag);
 
 const hasValidCount = (tags) => tags.length <= MAX_HASHTAG_COUNT;
@@ -74,7 +74,6 @@ const validateTags = (value) => {
   const tags = value.trim().split(' ').filter((tag) => tag.length !== 0);
   return hasValidCount(tags) && hasUniqueTags(tags) && tags.every(isValidTag);
 };
-
 
 pristine.addValidator (
   fieldHashteg,
