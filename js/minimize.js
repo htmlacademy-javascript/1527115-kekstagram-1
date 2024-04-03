@@ -10,7 +10,6 @@ const generateTemplate = ({likes, comments, url, descriptions, id}) => {
   thumbnail.querySelector('.picture__comments').textContent = comments.length;
   thumbnail.querySelector('.picture__img').src = url;
   thumbnail.querySelector('.picture__img').alt = descriptions;
-  // thumbnail.querySelector('.picture__img').dataset.imageId = id;
   thumbnail.dataset.imgId = id;
 
   return thumbnail;

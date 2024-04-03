@@ -25,6 +25,9 @@ const MESSAGES = [
 ];
 
 const SIMILAR_FOTO_COUNT = 25;
+const MIN_RANDOM_LIKES_VALUE = 15;
+const MAX_RANDOM_LIKES_VALUE = 250;
+const MAX_NUMBER_OF_COMMENTS = 25;
 
 const getTotalMessage = () => {
   const NUMBER_OF_MESSAGES = getRandomInteger(1, 2);
@@ -66,15 +69,12 @@ const getCreateFotoDescription = () => {
     id: randomIdIndex,
     url: `photos/${randomIdIndex}.jpg`,
     descriptions: getRandomArrayElement(FOTO_DESCRIPTION),
-    likes: getRandomInteger(15, 250),
-    comments: Array.from({length: getRandomInteger(1, 25)}, getCreatingComment)
+    likes: getRandomInteger(MIN_RANDOM_LIKES_VALUE, MAX_RANDOM_LIKES_VALUE),
+    comments: Array.from({length: getRandomInteger(1, MAX_NUMBER_OF_COMMENTS)}, getCreatingComment)
   };
 };
 
 const getPictures = () => Array.from({length: SIMILAR_FOTO_COUNT}, getCreateFotoDescription);
 const pictureCollections = getPictures();
 
-const pictureData = () => pictureCollections;
-
-// export { getPictures };
-export { pictureData };
+export { pictureCollections };

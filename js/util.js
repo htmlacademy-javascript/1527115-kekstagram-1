@@ -1,3 +1,5 @@
+const body = document.body;
+
 const getRandomInteger = (a, b) => {
   const lower = Math.ceil(Math.min(a, b));
   const upper = Math.floor(Math.max(a, b));
@@ -10,4 +12,4 @@ const getRandomArrayElement = (element) => element[getRandomInteger(0, element.l
 const isEscapeKey = (evt) => evt.key === 'Escape';
 
 
-export { getRandomArrayElement, getRandomInteger, isEscapeKey };
+export { getRandomArrayElement, getRandomInteger, isEscapeKey, body };
