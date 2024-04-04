@@ -1,6 +1,7 @@
-import { pictureData } from './data.js';
+import { pictureCollections } from './data.js';
 import { addUserImage } from './minimize.js';
 import { initListener } from './fullscreen-picture.js';
+import './form.js';
 
-initListener(pictureData());
-addUserImage(pictureData());
+initListener(pictureCollections);
+addUserImage(pictureCollections);
