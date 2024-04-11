@@ -1,5 +1,8 @@
 import { pictureCollections } from './data.js';
-import { isEscapeKey, body } from './util.js';
+import {
+  isEscapeKey,
+  bodyEl
+} from './util.js';
 
 const fullscreenPicture = document.querySelector('.big-picture');
 const pictureContainer = document.querySelector('.pictures');
@@ -74,7 +77,7 @@ const addPictureParameters = ({ likes, comments, url, descriptions }) => {
 
 const hideModal = () => {
   fullscreenPicture.classList.add('hidden');
-  body.classList.remove('modal-open');
+  bodyEl.classList.remove('modal-open');
   commentsCounter = 5;
   document.removeEventListener('keydown', onModalEscKeydown);
   closedPopup.removeEventListener('click', hideModal);
@@ -82,7 +85,7 @@ const hideModal = () => {
 
 const showModal = () => {
   fullscreenPicture.classList.remove('hidden');
-  body.classList.add('modal-open');
+  bodyEl.classList.add('modal-open');
   document.addEventListener('keydown', onModalEscKeydown);
   closedPopup.addEventListener('click', hideModal);
 };

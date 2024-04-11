@@ -1,15 +1,20 @@
-import { isEscapeKey, body } from './util.js';
+import {
+  isEscapeKey,
+  bodyEl
+} from './util.js';
+import { resetEffect } from './effects.js';
+import { resetScale } from './scale.js';
 
 const VALID_HASHTEG = /^#[a-zа-яё0-9]{1,19}$/i;
-const TAG_ERROR_TEXT = 'Неверно указаны хэштеги';
 const MAX_HASHTAG_COUNT = 5;
+let textError = 'Текст ошибки';
 
 const form = document.querySelector('.img-upload__form');
-const uploadImage = document.querySelector('#upload-select-image');
-const uploadImageModal = document.querySelector('.img-upload__overlay');
+const fileField = document.querySelector('.img-upload__start');
+const uploadImageModal = form.querySelector('.img-upload__overlay');
 const modalClosedButton = uploadImageModal.querySelector('#upload-cancel');
-const fieldHashteg = document.querySelector('.text__hashtags');
-const fieldComment = document.querySelector('.text__description');
+const fieldHashteg = uploadImageModal.querySelector('.text__hashtags');
+const fieldComment = uploadImageModal.querySelector('.text__description');
 
 const pristine = new Pristine(form, {
   classTo: 'img-upload__field-wrapper',
@@ -18,15 +23,17 @@ const pristine = new Pristine(form, {
 
 const showModal = () => {
   uploadImageModal.classList.remove('hidden');
-  body.classList.add('modal-open');
+  bodyEl.classList.add('modal-open');
   document.addEventListener('keydown', onModalEscKeydown);
 };
 
 const hideModal = () => {
   form.reset();
   pristine.reset();
+  resetEffect();
+  resetScale();
   uploadImageModal.classList.add('hidden');
-  body.classList.remove('modal-open');
+  bodyEl.classList.remove('modal-open');
   document.removeEventListener('keydown', onModalEscKeydown);
 };
 
@@ -40,26 +47,13 @@ const onFileInputChange = () => {
 
 function onModalEscKeydown (evt) {
   if (isEscapeKey(evt)) {
+    if(document.activeElement === fieldHashteg || document.activeElement === fieldComment) {
+      return;
+    }
     evt.preventDefault();
     hideModal();
   }
 }
-
-fieldHashteg.addEventListener ('focus', () => {
-  document.removeEventListener('keydown', onModalEscKeydown);
-});
-
-fieldHashteg.addEventListener ('blur', () => {
-  document.addEventListener('keydown', onModalEscKeydown);
-});
-
-fieldComment.addEventListener ('focus', () => {
-  document.removeEventListener('keydown', onModalEscKeydown);
-});
-
-fieldComment.addEventListener ('blur', () => {
-  document.addEventListener('keydown', onModalEscKeydown);
-});
 
 const isValidTag = (tag) => VALID_HASHTEG.test(tag);
 
@@ -72,20 +66,36 @@ const hasUniqueTags = (tags) => {
 
 const validateTags = (value) => {
   const tags = value.trim().split(' ').filter((tag) => tag.length !== 0);
-  return hasValidCount(tags) && hasUniqueTags(tags) && tags.every(isValidTag);
+  switch(false) {
+    case hasUniqueTags(tags):
+      textError = 'Хэштеги не должны повторяться';
+      return false;
+    case hasValidCount(tags):
+      textError = 'Укажите не более 5 хэштегов';
+      return false;
+    case tags.every(isValidTag):
+      textError = 'Хэштег должен начинаться с # и ссотоять из букв и/или цифр';
+      return false;
+    default:
+      return true;
+  }
 };
+
+const getTextError = () => textError;
 
 pristine.addValidator (
   fieldHashteg,
   validateTags,
-  TAG_ERROR_TEXT
+  getTextError
 );
 
 const onFormSubmit = (evt) => {
   evt.preventDefault();
-  pristine.validate();
+  if (pristine.validate()) {
+    pristine.validate();
+  }
 };
 
-uploadImage.addEventListener('change', onFileInputChange);
+fileField.addEventListener('change', onFileInputChange);
 modalClosedButton.addEventListener('click', onCancelButtonClick);
 form.addEventListener('submit', onFormSubmit);
