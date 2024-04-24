@@ -60,7 +60,7 @@ const effectLevelElement = sliderContainer.querySelector('.effect-level__value')
 const sliderElement = sliderContainer.querySelector('.effect-level__slider');
 
 
-const isDefault = () => selectedEffect === DEFAULT_EFFECT;
+const isDefault = () => selectedEffect.name === DEFAULT_EFFECT.name;
 
 const hideSlider = () => {
   sliderContainer.classList.add('hidden');
@@ -81,7 +81,7 @@ const updateSlider = () => {
     connect: 'lower'
   });
 
-  if(isDefault()) {
+  if (isDefault()) {
     hideSlider();
   } else {
     showSlider();
@@ -89,7 +89,7 @@ const updateSlider = () => {
 };
 
 const onEffectsChange = (evt) => {
-  if(!evt.target.classList.contains('effects__radio')) {
+  if (!evt.target.classList.contains('effects__radio')) {
     return;
   }
   selectedEffect = EFFECTS.find((effect) => effect.name === evt.target.value);

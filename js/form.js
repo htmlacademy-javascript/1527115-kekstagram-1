@@ -4,6 +4,7 @@ import {
 } from './util.js';
 import { resetEffect } from './effects.js';
 import { resetScale } from './scale.js';
+import { sendData } from './api.js';
 
 const VALID_HASHTEG = /^#[a-zа-яё0-9]{1,19}$/i;
 const MAX_HASHTAG_COUNT = 5;
@@ -11,10 +12,21 @@ let textError = 'Текст ошибки';
 
 const form = document.querySelector('.img-upload__form');
 const fileField = document.querySelector('.img-upload__start');
-const uploadImageModal = form.querySelector('.img-upload__overlay');
-const modalClosedButton = uploadImageModal.querySelector('#upload-cancel');
-const fieldHashteg = uploadImageModal.querySelector('.text__hashtags');
-const fieldComment = uploadImageModal.querySelector('.text__description');
+const uploadImageModalElement = form.querySelector('.img-upload__overlay');
+const modalClosedButton = uploadImageModalElement.querySelector('#upload-cancel');
+const fieldHashteg = uploadImageModalElement.querySelector('.text__hashtags');
+const fieldComment = uploadImageModalElement.querySelector('.text__description');
+
+const templateSuccessMessage = document.querySelector('#success')
+  .content
+  .querySelector('.success');
+const templateErrorMessage = document.querySelector('#error')
+  .content
+  .querySelector('.error');
+const template = templateSuccessMessage.cloneNode(true);
+const templateClassName = template.className;
+const templateError = templateErrorMessage.cloneNode(true);
+const templateErrorClassName = templateError.className;
 
 const pristine = new Pristine(form, {
   classTo: 'img-upload__field-wrapper',
@@ -22,7 +34,7 @@ const pristine = new Pristine(form, {
 });
 
 const showModal = () => {
-  uploadImageModal.classList.remove('hidden');
+  uploadImageModalElement.classList.remove('hidden');
   bodyEl.classList.add('modal-open');
   document.addEventListener('keydown', onModalEscKeydown);
 };
@@ -32,7 +44,7 @@ const hideModal = () => {
   pristine.reset();
   resetEffect();
   resetScale();
-  uploadImageModal.classList.add('hidden');
+  uploadImageModalElement.classList.add('hidden');
   bodyEl.classList.remove('modal-open');
   document.removeEventListener('keydown', onModalEscKeydown);
 };
@@ -47,7 +59,11 @@ const onFileInputChange = () => {
 
 function onModalEscKeydown (evt) {
   if (isEscapeKey(evt)) {
-    if(document.activeElement === fieldHashteg || document.activeElement === fieldComment) {
+    if(
+      document.activeElement === fieldHashteg ||
+      document.activeElement === fieldComment ||
+      templateError.className === 'error'
+    ) {
       return;
     }
     evt.preventDefault();
@@ -89,13 +105,76 @@ pristine.addValidator (
   getTextError
 );
 
-const onFormSubmit = (evt) => {
-  evt.preventDefault();
-  if (pristine.validate()) {
-    pristine.validate();
-  }
+const createMessage = (element) => {
+  element.classList = 'hidden';
+  bodyEl.append(element);
 };
 
+createMessage(template);
+createMessage(templateError);
+
+const showErrorMessage = () => {
+  document.addEventListener('keydown', onMessageEscKeydown);
+  errorMessageUnfocus();
+  templateError.classList = templateErrorClassName;
+};
+
+const hideErrorMessage = () => {
+  templateError.classList = 'hidden';
+};
+
+function errorMessageUnfocus () {
+  templateError.addEventListener('click', (evt) => {
+    if (evt.target.closest('.error__inner') !== templateError.querySelector('.error__inner')) {
+      hideErrorMessage();
+    }
+  });
+}
+
+const showSuccessMessage = () => {
+  document.addEventListener('keydown', onMessageEscKeydown);
+  successMessageUnfocus();
+  template.classList = templateClassName;
+};
+
+const hideSuccessMessage = () => {
+  template.classList = 'hidden';
+};
+
+function onMessageEscKeydown (evt) {
+  if (isEscapeKey(evt)) {
+    hideSuccessMessage();
+    hideErrorMessage();
+  }
+}
+
+function successMessageUnfocus () {
+  template.addEventListener('click', (evt) => {
+    if (evt.target.closest('.success__inner') !== template.querySelector('.success__inner')) {
+      hideSuccessMessage();
+    }
+  });
+}
+
+const setOnFormSubmit = () => {
+  form.addEventListener('submit', (evt) => {
+    evt.preventDefault();
+
+    if (pristine.validate()) {
+      sendData(new FormData(evt.target))
+        .then(hideModal)
+        .then(showSuccessMessage)
+        .catch(showErrorMessage);
+    }
+  });
+};
+
+const successButton = document.querySelector('.success__button');
+const errorButton = document.querySelector('.error__button');
+
+successButton.addEventListener('click', hideSuccessMessage);
+errorButton.addEventListener('click', hideErrorMessage);
 fileField.addEventListener('change', onFileInputChange);
 modalClosedButton.addEventListener('click', onCancelButtonClick);
-form.addEventListener('submit', onFormSubmit);
+
+export { setOnFormSubmit };

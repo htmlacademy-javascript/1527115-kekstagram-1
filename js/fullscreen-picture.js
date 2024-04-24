@@ -1,4 +1,4 @@
-import { pictureCollections } from './data.js';
+// import { pictureCollections } from './data.js';
 import {
   isEscapeKey,
   bodyEl
@@ -54,9 +54,7 @@ const addSocialComments = (comments) => {
     cloneComment.querySelector('.social__picture').src = comment.avatar;
     cloneComment.querySelector('.social__picture').alt = comment.name;
     cloneComment.querySelector('.social__text').textContent = '';
-    comment.message.forEach((element) => {
-      cloneComment.querySelector('.social__text').textContent += `${element} `;
-    });
+    cloneComment.querySelector('.social__text').textContent += `${comment.message} `;
     socialCommentList.appendChild(cloneComment);
   });
 
@@ -64,10 +62,10 @@ const addSocialComments = (comments) => {
   commentsHidden();
 };
 
-const addPictureParameters = ({ likes, comments, url, descriptions }) => {
+const addPictureParameters = ({ likes, comments, url, description }) => {
   bigPicture.querySelector('img').src = url;
-  bigPicture.querySelector('img').alt = descriptions;
-  pictureSocial.querySelector('.social__caption').textContent = descriptions;
+  bigPicture.querySelector('img').alt = description;
+  pictureSocial.querySelector('.social__caption').textContent = description;
   likesCount.textContent = likes;
   commentsShown.textContent = commentsCounter;
   commentCount.textContent = comments.length;
@@ -96,7 +94,7 @@ function onModalEscKeydown (evt) {
   }
 }
 
-const initListener = () => {
+const initListener = (pictureCollections) => {
   pictureContainer.addEventListener('click', (evt) => {
     const changedElement = evt.target.closest('.picture');
     if (changedElement) {
@@ -108,7 +106,5 @@ const initListener = () => {
     }
   });
 };
-
-// initListener(pictureData());
 
 export { initListener };

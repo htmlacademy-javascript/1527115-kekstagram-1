@@ -1,3 +1,0 @@
-// import { pictureData } from './data';
-
-

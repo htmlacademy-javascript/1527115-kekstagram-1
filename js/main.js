@@ -1,9 +1,18 @@
-import { pictureCollections } from './data.js';
 import { addUserImage } from './minimize.js';
 import { initListener } from './fullscreen-picture.js';
-import './form.js';
+import { setOnFormSubmit } from './form.js';
 import './scale.js';
 import './effects.js';
+import { getData } from './api.js';
+import { showAllert } from './util.js';
 
-initListener(pictureCollections);
-addUserImage(pictureCollections);
+getData()
+  .then((pictures) => {
+    addUserImage(pictures);
+    initListener(pictures);
+  })
+  .catch((err) => {
+    showAllert(err.message);
+  });
+
+setOnFormSubmit();
