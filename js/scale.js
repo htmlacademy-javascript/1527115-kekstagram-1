@@ -37,5 +37,4 @@ const resetScale = () => {
 buttonScaleSmaller.addEventListener('click', inScaleSmaller);
 buttonScaleBigger.addEventListener('click', inScaleBigger);
 
-export { imgPreview };
-export { resetScale };
+export { imgPreview, resetScale };
