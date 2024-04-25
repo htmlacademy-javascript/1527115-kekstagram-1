@@ -9,6 +9,10 @@ import { sendData } from './api.js';
 const VALID_HASHTEG = /^#[a-zа-яё0-9]{1,19}$/i;
 const MAX_HASHTAG_COUNT = 5;
 let textError = 'Текст ошибки';
+const SubmitButtonText = {
+  IDLE: 'Опубликовать',
+  SENDING: 'Загрузка...'
+};
 
 const form = document.querySelector('.img-upload__form');
 const fileField = document.querySelector('.img-upload__start');
@@ -16,6 +20,7 @@ const uploadImageModalElement = form.querySelector('.img-upload__overlay');
 const modalClosedButton = uploadImageModalElement.querySelector('#upload-cancel');
 const fieldHashteg = uploadImageModalElement.querySelector('.text__hashtags');
 const fieldComment = uploadImageModalElement.querySelector('.text__description');
+const submitButton = document.querySelector('.img-upload__submit');
 
 const templateSuccessMessage = document.querySelector('#success')
   .content
@@ -156,15 +161,27 @@ function successMessageUnfocus () {
   });
 }
 
+const blockSubmitButton = () => {
+  submitButton.disabled = true;
+  submitButton.textContent = SubmitButtonText.SENDING;
+};
+
+const unBlockSubmitButton = () => {
+  submitButton.disabled = false;
+  submitButton.textContent = SubmitButtonText.IDLE;
+};
+
 const setOnFormSubmit = () => {
   form.addEventListener('submit', (evt) => {
     evt.preventDefault();
 
     if (pristine.validate()) {
+      blockSubmitButton();
       sendData(new FormData(evt.target))
         .then(hideModal)
         .then(showSuccessMessage)
-        .catch(showErrorMessage);
+        .catch(showErrorMessage)
+        .finally(unBlockSubmitButton);
     }
   });
 };
