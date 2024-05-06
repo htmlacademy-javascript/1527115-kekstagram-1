@@ -115,9 +115,6 @@ const createMessage = (element) => {
   bodyEl.append(element);
 };
 
-createMessage(template);
-createMessage(templateError);
-
 const showErrorMessage = () => {
   document.addEventListener('keydown', onMessageEscKeydown);
   errorMessageUnfocus();
@@ -144,7 +141,18 @@ const showSuccessMessage = () => {
 
 const hideSuccessMessage = () => {
   template.classList = 'hidden';
+  template.removeEventListener('click', onHideSuccessMessage);
 };
+
+const onHideMessage = () => {
+  hideSuccessMessage();
+};
+
+function onHideSuccessMessage (evt) {
+  if (evt.target.closest('.success__inner') !== template.querySelector('.success__inner')) {
+    hideSuccessMessage();
+  }
+}
 
 function onMessageEscKeydown (evt) {
   if (isEscapeKey(evt)) {
@@ -154,11 +162,7 @@ function onMessageEscKeydown (evt) {
 }
 
 function successMessageUnfocus () {
-  template.addEventListener('click', (evt) => {
-    if (evt.target.closest('.success__inner') !== template.querySelector('.success__inner')) {
-      hideSuccessMessage();
-    }
-  });
+  template.addEventListener('click', onHideSuccessMessage);
 }
 
 const blockSubmitButton = () => {
@@ -166,31 +170,46 @@ const blockSubmitButton = () => {
   submitButton.textContent = SubmitButtonText.SENDING;
 };
 
-const unBlockSubmitButton = () => {
+const unblockSubmitButton = () => {
   submitButton.disabled = false;
   submitButton.textContent = SubmitButtonText.IDLE;
 };
 
-const setOnFormSubmit = () => {
-  form.addEventListener('submit', (evt) => {
-    evt.preventDefault();
-
-    if (pristine.validate()) {
-      blockSubmitButton();
-      sendData(new FormData(evt.target))
-        .then(hideModal)
-        .then(showSuccessMessage)
-        .catch(showErrorMessage)
-        .finally(unBlockSubmitButton);
-    }
-  });
+const getsuccessMessages = () => {
+  createMessage(template);
+  const successButton = document.querySelector('.success__button');
+  successButton.addEventListener('click', onHideMessage);
 };
 
-const successButton = document.querySelector('.success__button');
-const errorButton = document.querySelector('.error__button');
+const getErrorMessage = () => {
+  createMessage(templateError);
+  const errorButton = document.querySelector('.error__button');
+  errorButton.addEventListener('click', hideErrorMessage);
+};
 
-successButton.addEventListener('click', hideSuccessMessage);
-errorButton.addEventListener('click', hideErrorMessage);
+const onValidate = (evt) => {
+  evt.preventDefault();
+
+  if (pristine.validate()) {
+    blockSubmitButton();
+    sendData(new FormData(evt.target))
+      .then(hideModal)
+      .then(getsuccessMessages)
+      .then(showSuccessMessage)
+      .catch(() => {
+        getErrorMessage();
+        showErrorMessage();
+      })
+      .finally(() => {
+        unblockSubmitButton();
+      });
+  }
+};
+
+const setOnFormSubmit = () => {
+  form.addEventListener('submit', onValidate);
+};
+
 fileField.addEventListener('change', onFileInputChange);
 modalClosedButton.addEventListener('click', onCancelButtonClick);
 

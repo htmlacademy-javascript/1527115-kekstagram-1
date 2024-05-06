@@ -11,18 +11,21 @@ const getRandomArrayElement = (element) => element[getRandomInteger(0, element.l
 
 const isEscapeKey = (evt) => evt.key === 'Escape';
 
-const showAllert = (message) => {
-  const allertContainet = document.createElement('div');
-  allertContainet.style.zIndex = '100';
-  allertContainet.style.position = 'fixed';
-  allertContainet.style.bottom = '0';
-  allertContainet.style.width = '100vw';
-  allertContainet.style.textAlign = 'center';
-  allertContainet.style.backgroundColor = 'red';
-  allertContainet.style.color = 'white';
-  allertContainet.textContent = message;
+const showalert = (message) => {
+  const alertContainet = document.createElement('div');
+  alertContainet.classList.add('alert');
+  alertContainet.textContent = message;
 
-  bodyEl.append(allertContainet);
+  bodyEl.append(alertContainet);
+};
+
+const debounce = (callback, timeoutDelay = 1000) => {
+  let timeoutId;
+
+  return (...rest) => {
+    clearTimeout(timeoutId);
+    timeoutId = setTimeout(() => callback.apply(this, rest), timeoutDelay);
+  };
 };
 
 export {
@@ -30,5 +33,6 @@ export {
   getRandomInteger,
   isEscapeKey,
   bodyEl,
-  showAllert
+  showalert,
+  debounce
 };
