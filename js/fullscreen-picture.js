@@ -17,7 +17,7 @@ const commentCount = socialCommentCount.querySelector('.comments-count');
 const commentsLoaderButton = document.querySelector('.comments-loader');
 let commentsCounter = 5;
 
-const commentsHidden = () => {
+const hiddeComments = () => {
   const currentComments = socialCommentList.querySelectorAll('.social__comment');
   if (currentComments.length <= commentsCounter) {
     commentsLoaderButton.classList.add('hidden');
@@ -38,10 +38,10 @@ const onLoaderButtonClick = (evt) => {
   evt.preventDefault();
   commentsCounter += 5;
   commentsShown.textContent = commentsCounter;
-  commentsHidden();
+  hiddeComments();
 };
 
-const commentsLoader = () => {
+const loaderComments = () => {
   commentsLoaderButton.addEventListener ('click', onLoaderButtonClick);
 };
 
@@ -57,8 +57,8 @@ const addSocialComments = (comments) => {
     socialCommentList.appendChild(cloneComment);
   });
 
-  commentsLoader();
-  commentsHidden();
+  loaderComments();
+  hiddeComments();
 };
 
 const addPictureParameters = ({ likes, comments, url, description }) => {

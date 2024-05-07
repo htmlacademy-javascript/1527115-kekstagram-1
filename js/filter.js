@@ -36,7 +36,7 @@ const getFilteredPictures = (pictures) => {
   }
 };
 
-const evtFunction = (evt, pictures) => {
+const getFilteredUserImage = (evt, pictures) => {
   if (evt.target.id === currentFilter) {
     return;
   }
@@ -48,19 +48,18 @@ const evtFunction = (evt, pictures) => {
   addUserImage(getFilteredPictures(pictures));
 };
 
-const functionRrr = (evt) => {
+const togglesButton = (evt) => {
+  const sortButton = document.querySelector('.img-filters__button--active');
+
   if (evt.target.closest('.img-filters__button')) {
-    filters.querySelectorAll('.img-filters__button')
-      .forEach((element) => element
-        .classList
-        .remove('img-filters__button--active'));
+    sortButton.classList.remove('img-filters__button--active');
     evt.target.classList.add('img-filters__button--active');
   }
 };
 
 const filterButtonToggle = (pictures) => {
-  filters.addEventListener('click', debounce((evt) => evtFunction(evt, pictures)));
-  filters.addEventListener('click', (evt) => functionRrr(evt));
+  filters.addEventListener('click', debounce((evt) => getFilteredUserImage(evt, pictures)));
+  filters.addEventListener('click', (evt) => togglesButton(evt));
 };
 
 export { showFilter, filterButtonToggle };

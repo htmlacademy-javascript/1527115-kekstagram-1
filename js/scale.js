@@ -1,7 +1,7 @@
-let scale = 100;
 const MIN_SCALE = 25;
 const MAX_SCALE = 100;
 const STEP_SCALE = 25;
+let scale = 100;
 
 const scaleValue = document.querySelector('.scale__control--value');
 const imgPreview = document.querySelector('.img-upload__preview img');

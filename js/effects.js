@@ -88,11 +88,17 @@ const updateSlider = () => {
   }
 };
 
+const addClassEffects = (evt) => {
+  imgPreview.classList = '';
+  imgPreview.classList.add(`effects__preview--${evt.target.value}`);
+};
+
 const onEffectsChange = (evt) => {
   if (!evt.target.classList.contains('effects__radio')) {
     return;
   }
   selectedEffect = EFFECTS.find((effect) => effect.name === evt.target.value);
+  addClassEffects(evt);
   updateSlider();
 };
 

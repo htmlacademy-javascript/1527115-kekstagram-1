@@ -117,15 +117,16 @@ const createMessage = (element) => {
 
 const showErrorMessage = () => {
   document.addEventListener('keydown', onMessageEscKeydown);
-  errorMessageUnfocus();
+  isErrorMessageUnfocus();
   templateError.classList = templateErrorClassName;
 };
 
 const hideErrorMessage = () => {
+  document.removeEventListener('keydown', onMessageEscKeydown);
   templateError.classList = 'hidden';
 };
 
-function errorMessageUnfocus () {
+function isErrorMessageUnfocus () {
   templateError.addEventListener('click', (evt) => {
     if (evt.target.closest('.error__inner') !== templateError.querySelector('.error__inner')) {
       hideErrorMessage();
@@ -175,7 +176,7 @@ const unblockSubmitButton = () => {
   submitButton.textContent = SubmitButtonText.IDLE;
 };
 
-const getsuccessMessages = () => {
+const getSuccessMessages = () => {
   createMessage(template);
   const successButton = document.querySelector('.success__button');
   successButton.addEventListener('click', onHideMessage);
@@ -194,7 +195,7 @@ const onValidate = (evt) => {
     blockSubmitButton();
     sendData(new FormData(evt.target))
       .then(hideModal)
-      .then(getsuccessMessages)
+      .then(getSuccessMessages)
       .then(showSuccessMessage)
       .catch(() => {
         getErrorMessage();
