@@ -4,15 +4,23 @@ import { setOnFormSubmit } from './form.js';
 import './scale.js';
 import './effects.js';
 import { getData } from './api.js';
-import { showAllert } from './util.js';
+import { showalert } from './util.js';
+import { showFilter, filterButtonToggle } from './filter.js';
 
-getData()
-  .then((pictures) => {
-    addUserImage(pictures);
-    initListener(pictures);
-  })
-  .catch((err) => {
-    showAllert(err.message);
-  });
+const getDataDefault = () => {
+  getData()
+    .then((pictures) => {
+      showFilter();
+      filterButtonToggle(pictures);
+      addUserImage(pictures);
+      initListener(pictures);
+    })
+    .catch((err) => {
+      showalert(err.message);
+    })
+    .finally(setOnFormSubmit());
+};
 
-setOnFormSubmit();
+getDataDefault();
+
+export {getDataDefault};

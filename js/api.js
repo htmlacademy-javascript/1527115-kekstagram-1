@@ -14,7 +14,7 @@ const ErrorText = {
   SEND_DATA: 'Post error',
 };
 
-const load = (route, errorText, method = Method.GET, body = null) =>
+const request = (route, errorText, method = Method.GET, body = null) =>
   fetch(`${BASE_URL}${route}`, {
     method,
     body,
@@ -29,8 +29,8 @@ const load = (route, errorText, method = Method.GET, body = null) =>
       throw new Error(errorText);
     });
 
-const getData = () => load(Route.GET_DATA, ErrorText.GET_DATA);
+const getData = () => request(Route.GET_DATA, ErrorText.GET_DATA);
 
-const sendData = (body) => load(Route.SEND_DATA, ErrorText.SEND_DATA, Method.POST, body);
+const sendData = (body) => request(Route.SEND_DATA, ErrorText.SEND_DATA, Method.POST, body);
 
 export { getData, sendData };

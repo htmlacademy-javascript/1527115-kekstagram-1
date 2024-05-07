@@ -25,4 +25,4 @@ const addUserImage = (pictures) => {
 
 };
 
-export { addUserImage };
+export { addUserImage, pictureContainer };

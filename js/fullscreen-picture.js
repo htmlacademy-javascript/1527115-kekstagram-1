@@ -1,4 +1,3 @@
-// import { pictureCollections } from './data.js';
 import {
   isEscapeKey,
   bodyEl
