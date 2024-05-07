@@ -11,7 +11,7 @@ const getRandomArrayElement = (element) => element[getRandomInteger(0, element.l
 
 const isEscapeKey = (evt) => evt.key === 'Escape';
 
-const showalert = (message) => {
+const showAlert = (message) => {
   const alertContainet = document.createElement('div');
   alertContainet.classList.add('alert');
   alertContainet.textContent = message;
@@ -19,7 +19,7 @@ const showalert = (message) => {
   bodyEl.append(alertContainet);
 };
 
-const debounce = (callback, timeoutDelay = 1000) => {
+const debounce = (callback, timeoutDelay = 500) => {
   let timeoutId;
 
   return (...rest) => {
@@ -33,6 +33,6 @@ export {
   getRandomInteger,
   isEscapeKey,
   bodyEl,
-  showalert,
+  showAlert,
   debounce
 };
