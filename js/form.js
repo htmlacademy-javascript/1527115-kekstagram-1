@@ -141,8 +141,8 @@ const showSuccessMessage = () => {
 };
 
 const hideSuccessMessage = () => {
+  document.removeEventListener('keydown', onMessageEscKeydown);
   template.classList = 'hidden';
-  template.removeEventListener('click', onHideSuccessMessage);
 };
 
 const onHideMessage = () => {
