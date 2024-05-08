@@ -64,6 +64,7 @@ const isDefault = () => selectedEffect.name === DEFAULT_EFFECT.name;
 
 const hideSlider = () => {
   sliderContainer.classList.add('hidden');
+  imgPreview.classList = selectedEffect.name;
 };
 
 const showSlider = () => {
@@ -98,8 +99,8 @@ const onEffectsChange = (evt) => {
     return;
   }
   selectedEffect = EFFECTS.find((effect) => effect.name === evt.target.value);
-  addClassEffects(evt);
   updateSlider();
+  addClassEffects(evt);
 };
 
 const onSliderUpdate = () => {

@@ -5,6 +5,7 @@ import {
 import { resetEffect } from './effects.js';
 import { resetScale } from './scale.js';
 import { sendData } from './api.js';
+import { uploadingFile } from './load-pictures.js';
 
 const VALID_HASHTEG = /^#[a-zа-яё0-9]{1,19}$/i;
 const MAX_HASHTAG_COUNT = 5;
@@ -38,10 +39,45 @@ const pristine = new Pristine(form, {
   errorTextParent: 'img-upload__field-wrapper',
 });
 
+const createMessage = (element) => {
+  element.classList = 'hidden';
+  bodyEl.append(element);
+};
+
+const hideErrorMessage = () => {
+  document.removeEventListener('keydown', onMessageEscKeydown);
+  templateError.classList = 'hidden';
+};
+
+const hideSuccessMessage = () => {
+  document.removeEventListener('keydown', onMessageEscKeydown);
+  template.classList = 'hidden';
+  if (uploadImageModalElement.classList.contains('hidden')) {
+    bodyEl.classList.remove('modal-open');
+  }
+};
+
+const onHideMessage = () => {
+  hideSuccessMessage();
+};
+
+const getSuccessMessages = () => {
+  createMessage(template);
+  const successButton = document.querySelector('.success__button');
+  successButton.addEventListener('click', onHideMessage);
+};
+
+const getErrorMessage = () => {
+  createMessage(templateError);
+  const errorButton = document.querySelector('.error__button');
+  errorButton.addEventListener('click', hideErrorMessage);
+};
+
 const showModal = () => {
   uploadImageModalElement.classList.remove('hidden');
   bodyEl.classList.add('modal-open');
   document.addEventListener('keydown', onModalEscKeydown);
+  getErrorMessage();
 };
 
 const hideModal = () => {
@@ -110,20 +146,10 @@ pristine.addValidator (
   getTextError
 );
 
-const createMessage = (element) => {
-  element.classList = 'hidden';
-  bodyEl.append(element);
-};
-
 const showErrorMessage = () => {
   document.addEventListener('keydown', onMessageEscKeydown);
   isErrorMessageUnfocus();
   templateError.classList = templateErrorClassName;
-};
-
-const hideErrorMessage = () => {
-  document.removeEventListener('keydown', onMessageEscKeydown);
-  templateError.classList = 'hidden';
 };
 
 function isErrorMessageUnfocus () {
@@ -138,15 +164,7 @@ const showSuccessMessage = () => {
   document.addEventListener('keydown', onMessageEscKeydown);
   successMessageUnfocus();
   template.classList = templateClassName;
-};
-
-const hideSuccessMessage = () => {
-  document.removeEventListener('keydown', onMessageEscKeydown);
-  template.classList = 'hidden';
-};
-
-const onHideMessage = () => {
-  hideSuccessMessage();
+  bodyEl.classList.add('modal-open');
 };
 
 function onHideSuccessMessage (evt) {
@@ -176,40 +194,29 @@ const unblockSubmitButton = () => {
   submitButton.textContent = SubmitButtonText.IDLE;
 };
 
-const getSuccessMessages = () => {
-  createMessage(template);
-  const successButton = document.querySelector('.success__button');
-  successButton.addEventListener('click', onHideMessage);
-};
-
-const getErrorMessage = () => {
-  createMessage(templateError);
-  const errorButton = document.querySelector('.error__button');
-  errorButton.addEventListener('click', hideErrorMessage);
-};
-
-const onValidate = (evt) => {
+async function onValidate (evt) {
   evt.preventDefault();
 
   if (pristine.validate()) {
     blockSubmitButton();
-    sendData(new FormData(evt.target))
-      .then(hideModal)
-      .then(getSuccessMessages)
-      .then(showSuccessMessage)
-      .catch(() => {
-        getErrorMessage();
-        showErrorMessage();
-      })
-      .finally(() => {
-        unblockSubmitButton();
-      });
+    try {
+      await sendData(new FormData(evt.target));
+      hideModal();
+      getSuccessMessages();
+      showSuccessMessage();
+    } catch {
+      showErrorMessage();
+    }
+    unblockSubmitButton();
   }
-};
+}
 
 const setOnFormSubmit = () => {
   form.addEventListener('submit', onValidate);
 };
+
+
+uploadingFile();
 
 fileField.addEventListener('change', onFileInputChange);
 modalClosedButton.addEventListener('click', onCancelButtonClick);

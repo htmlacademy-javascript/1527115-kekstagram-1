@@ -6,7 +6,6 @@ import './effects.js';
 import { getData } from './api.js';
 import { showAlert } from './util.js';
 import { showFilter, filterButtonToggle } from './filter.js';
-import './load-pictures.js';
 
 async function getDataDefault () {
   try {
