@@ -13,7 +13,6 @@ const uploadingFile = () => {
       picturePreview.src = URL.createObjectURL(file);
     }
   });
-  // cb();
 };
 
 export { uploadingFile };
