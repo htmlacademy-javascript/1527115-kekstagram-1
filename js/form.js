@@ -5,6 +5,7 @@ import {
 import { resetEffect } from './effects.js';
 import { resetScale } from './scale.js';
 import { sendData } from './api.js';
+import { uploadingFile } from './load-pictures.js';
 
 const VALID_HASHTEG = /^#[a-zа-яё0-9]{1,19}$/i;
 const MAX_HASHTAG_COUNT = 5;
@@ -193,27 +194,28 @@ const unblockSubmitButton = () => {
   submitButton.textContent = SubmitButtonText.IDLE;
 };
 
-const onValidate = (evt) => {
+async function onValidate (evt) {
   evt.preventDefault();
 
   if (pristine.validate()) {
     blockSubmitButton();
-    sendData(new FormData(evt.target))
-      .then(hideModal)
-      .then(getSuccessMessages)
-      .then(showSuccessMessage)
-      .catch(() => {
-        showErrorMessage();
-      })
-      .finally(() => {
-        unblockSubmitButton();
-      });
+    try {
+      await sendData(new FormData(evt.target));
+      hideModal();
+      getSuccessMessages();
+      showSuccessMessage();
+    } catch {
+      showErrorMessage();
+    }
+    unblockSubmitButton();
   }
-};
+}
 
 const setOnFormSubmit = () => {
   form.addEventListener('submit', onValidate);
 };
+
+uploadingFile();
 
 fileField.addEventListener('change', onFileInputChange);
 modalClosedButton.addEventListener('click', onCancelButtonClick);
